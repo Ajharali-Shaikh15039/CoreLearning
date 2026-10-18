@@ -1,4 +1,5 @@
 using FreeOurSelf.Models;
+using FreeOurSelf.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Controllers
 builder.Services.AddControllers();
+builder.Services.AddScoped<IStudent, StudentService>();
 
 var app = builder.Build();
 

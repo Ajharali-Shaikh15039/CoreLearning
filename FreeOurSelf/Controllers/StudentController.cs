@@ -1,6 +1,8 @@
 ﻿using FreeOurSelf.Models;
+using FreeOurSelf.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+
 
 namespace FreeOurSelf.Controllers
 {
@@ -8,55 +10,55 @@ namespace FreeOurSelf.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public StudentController(AppDbContext context)
+        
+        IStudent _studentService;
+
+        public StudentController(IStudent _studentService)
         {
-            _context = context;
+            this._studentService = _studentService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StudentModel>>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return await _context.Students.ToListAsync();
+            var response = await _studentService.GetAll();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<StudentModel>> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null) return NotFound();
-            return student;
+            var response = await _studentService.Get(id);
+            if (response == null) return NotFound();
+            return Ok(response);
         }
 
         // POST: api/student
         [HttpPost]
-        public async Task<ActionResult<StudentModel>> Create(StudentModel student)
+        public async Task<IActionResult> Create(StudentModel student)
         {
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = student.Id }, student);
+            var response = await _studentService.Create(student);
+            return Ok(response);
         }
 
         // PUT: api/student/1
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, StudentModel student)
         {
-            if (id != student.Id) return BadRequest();
-
-            _context.Entry(student).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            if(id != student.Id)
+            {
+                return BadRequest();
+            }
+            await _studentService.Update(id, student);
             return NoContent();
+
         }
 
         // DELETE: api/student/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null) return NotFound();
-
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
+            await _studentService.Delete(id);
             return NoContent();
         }
     }
