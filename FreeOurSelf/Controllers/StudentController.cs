@@ -2,6 +2,7 @@
 using FreeOurSelf.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using System.Globalization;
 
 
 namespace FreeOurSelf.Controllers
@@ -10,12 +11,21 @@ namespace FreeOurSelf.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        
+
         IStudent _studentService;
 
         public StudentController(IStudent _studentService)
         {
             this._studentService = _studentService;
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginDetail(LoginRequestModel request) {
+            var response = await _studentService.LoginDetail(request);
+            if (response == null) {
+                return NotFound();
+                    }
+            return Ok();
         }
 
         [HttpGet]

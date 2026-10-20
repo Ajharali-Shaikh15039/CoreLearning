@@ -11,6 +11,11 @@ namespace FreeOurSelf.Services
             _context = context;
         }
 
+        public async Task<LoginRequestModel> LoginDetail(LoginRequestModel login)
+        {
+            var student = await _context.Login.FirstOrDefaultAsync(s => s.EmailId == login.EmailId && s.Password == login.Password);
+            return student;
+        }
         public async Task<IEnumerable<StudentModel>> GetAll()
         {
             return await _context.Students.ToListAsync();

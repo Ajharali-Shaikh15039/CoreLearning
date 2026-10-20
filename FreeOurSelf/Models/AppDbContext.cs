@@ -6,6 +6,7 @@ namespace FreeOurSelf.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
         public DbSet<StudentModel> Students { get; set; }
+        public DbSet<LoginRequestModel> Login { get; set; }
 
 
 

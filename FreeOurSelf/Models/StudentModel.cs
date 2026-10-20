@@ -12,5 +12,7 @@ namespace FreeOurSelf.Models
         public int Age { get; set; }
         public string College { get; set; }
         public string EmailId { get; set; }
+
+        
     }
 }
